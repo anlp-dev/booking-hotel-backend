@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "booking-hotel-be",
   "version": "1.0.0",
   "description": "",
   "main": "functions/server.js",
