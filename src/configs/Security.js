@@ -29,14 +29,14 @@ const security = (app) => {
   app.use(passport.session());
 
   // cac routes phai co token moi co the truy cap duoc
-  app.use((req, res, next) => {
-    const noAuthPaths = [""];
-    if (noAuthPaths.includes(req.path)) {
-      next();
-    } else {
-      authMiddleware(req, res, next);
-    }
-  });
+    app.use((req, res, next) => {
+        const noAuthPaths = ["/auth/login"];
+        if (noAuthPaths.includes(req.path) || req.path.startsWith("/email/verify/")) {
+            next();
+        } else {
+            authMiddleware(req, res, next);
+        }
+    });
 };
 
 module.exports = security;

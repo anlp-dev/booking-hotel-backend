@@ -1,5 +1,4 @@
 const {getPermissionsForUser} = require('../database/db')
-const PATH = require('../enums/path')
 
 function checkPermission(permission){
   return async function (req, res, next) {
