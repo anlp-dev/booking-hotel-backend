@@ -22,10 +22,9 @@ async function killPort(port) {
 async function startServer(app) {
     let portCustom = Math.floor(Math.random() * (9999 - 3000 + 1)) + 3000;
 
-
     await killPort(previousPort);
     app.listen(process.env.PORT, () => {
-        console.log(`🚀 Server đang chạy tại http://localhost:9999`);
+        console.log(`🚀 Server đang chạy tại http://localhost:${process.env.PORT}`);
     });
 }
 
