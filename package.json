@@ -21,6 +21,7 @@
   },
   "homepage": "https://gitlab.com/sep193/anlp-nodejs#readme",
   "dependencies": {
+    "antd": "^5.24.2",
     "axios": "^1.7.9",
     "bcryptjs": "2.4.3",
     "connect-redis": "^8.0.1",

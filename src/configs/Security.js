@@ -1,6 +1,7 @@
 const setupSessionMiddleware = require('../middleware/SessionMiddleware');
 const { routePermissionMiddleware, initializeRoutePermissions } = require('../middleware/RoutePermissionMiddleware');
 
+
 /**
  * Cấu hình bảo mật cho ứng dụng
  * @param {Express} app - Express application instance
@@ -15,6 +16,7 @@ const security = async (app) => {
   
   // Áp dụng middleware kiểm tra quyền truy cập route
   app.use(routePermissionMiddleware);
+
 };
 
 module.exports = security;
