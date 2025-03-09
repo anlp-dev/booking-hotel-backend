@@ -1,7 +1,13 @@
+const mongoose = require("mongoose");
 const routerManage = require('../models/system/RouterManage');
 
 let routePermissionsCache = null;
 let routePermissionsMap = new Map();
+
+const pathToRegex = (path) => {
+  const pattern = path.replace(/:[\w]+/g, "[^/]+");
+  return new RegExp(`^${pattern}$`);
+};
 
 const loadRoutePermissions = async () => {
   try {
@@ -9,19 +15,22 @@ const loadRoutePermissions = async () => {
     const publicRoutes = allRoutes.filter(
       (r) => r.requireToken === false && r.status === "01"
     );
-    
-    routePermissionsMap.clear();
+    publicRoutes.push({ method: "GET", path: "/register/verify/:id" });
+
+    routePermissionsMap.clear(); 
     publicRoutes.forEach(route => {
       const key = `${route.method}:${route.path}`;
-      routePermissionsMap.set(key, true);
-      
+      const regex = pathToRegex(route.path);
+      routePermissionsMap.set(key, { method: route.method, regex });
+
       if (route.method === "*") {
         ["GET", "POST", "PUT", "DELETE", "PATCH"].forEach(method => {
-          routePermissionsMap.set(`${method}:${route.path}`, true);
+          const methodKey = `${method}:${route.path}`;
+          routePermissionsMap.set(methodKey, { method, regex });
         });
       }
     });
-    
+
     routePermissionsCache = publicRoutes;
     return publicRoutes;
   } catch (error) {
@@ -30,11 +39,11 @@ const loadRoutePermissions = async () => {
   }
 };
 
-// Middleware to check route permissions
 const routePermissionMiddleware = async (req, res, next) => {
-  const routeKey = `${req.method}:${req.path}`;
-  const isPublicRoute = routePermissionsMap.has(routeKey);
-  
+  const isPublicRoute = Array.from(routePermissionsMap.values()).some(
+    (route) => route.method === req.method && route.regex.test(req.path)
+  );
+
   if (isPublicRoute) {
     next();
   } else {
@@ -43,26 +52,23 @@ const routePermissionMiddleware = async (req, res, next) => {
   }
 };
 
-// Initialize route permissions
 const initializeRoutePermissions = async () => {
   await loadRoutePermissions();
-  
-  // Log only in development environment
+
   if (process.env.NODE_ENV !== 'production') {
     console.log("✅ Public routes loaded:", routePermissionsCache.length);
   }
-  
-  // Refresh route permissions every hour
+
   setInterval(async () => {
     await loadRoutePermissions();
     if (process.env.NODE_ENV !== 'production') {
       console.log("🔄 Route permissions refreshed");
     }
-  }, 60 * 60 * 1000); 
+  }, 60 * 60 * 1000);
 };
 
 module.exports = {
   routePermissionMiddleware,
   initializeRoutePermissions,
   loadRoutePermissions
-}; 
+};
