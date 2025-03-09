@@ -1,45 +1,22 @@
-const path = require("path");
-const express = require("express");
-const morgan = require("morgan");
-const session = require("express-session");
-const passport = require("passport");
-const secret = require("./Secrets");
-const authMiddleware = require("../middleware/AuthMiddleware");
+const setupSessionMiddleware = require('../middleware/SessionMiddleware');
+const { routePermissionMiddleware, initializeRoutePermissions } = require('../middleware/RoutePermissionMiddleware');
 
-const security = (app) => {
-  // Middleware xử lý JSON body
-  app.use(express.json());
 
-  // Middleware xử lý urlencoded body (dành cho form data)
-  app.use(express.urlencoded({ extended: true }));
+/**
+ * Cấu hình bảo mật cho ứng dụng
+ * @param {Express} app - Express application instance
+ * @returns {Promise<void>}
+ */
+const security = async (app) => {
+  // Thiết lập session và các middleware cơ bản
+  setupSessionMiddleware(app);
+  
+  // Khởi tạo và cấu hình route permissions
+  await initializeRoutePermissions();
+  
+  // Áp dụng middleware kiểm tra quyền truy cập route
+  app.use(routePermissionMiddleware);
 
-  // Sử dụng express-session
-  app.use(
-    session({
-      secret: secret.JWT_SECRET_KEY, // Thay bằng một chuỗi bí mật
-      resave: false,
-      saveUninitialized: true,
-      cookie: {
-        secure: false,
-        maxAge: 60 * 60 * 1000, // 1 tieng
-      }, // Đặt secure: true nếu sử dụng HTTPS
-    })
-  );
-  app.use(passport.initialize());
-  app.use(passport.session());
-
-  // cac routes phai co token moi co the truy cap duoc
-  app.use((req, res, next) => {
-    const noAuthPaths = ["/auth/login", "/room"];
-    if (
-      noAuthPaths.includes(req.path) ||
-      req.path.startsWith("/email/verify/")
-    ) {
-      next();
-    } else {
-      authMiddleware(req, res, next);
-    }
-  });
 };
 
 module.exports = security;
