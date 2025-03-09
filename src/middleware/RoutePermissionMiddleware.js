@@ -1,10 +1,8 @@
 const routerManage = require('../models/system/RouterManage');
 
-// Cache for storing route permissions
 let routePermissionsCache = null;
 let routePermissionsMap = new Map();
 
-// Function to load route permissions from database
 const loadRoutePermissions = async () => {
   try {
     const allRoutes = await routerManage.find({});
@@ -12,13 +10,11 @@ const loadRoutePermissions = async () => {
       (r) => r.requireToken === false && r.status === "01"
     );
     
-    // Create a more efficient lookup map
     routePermissionsMap.clear();
     publicRoutes.forEach(route => {
       const key = `${route.method}:${route.path}`;
       routePermissionsMap.set(key, true);
       
-      // Also add wildcard method routes
       if (route.method === "*") {
         ["GET", "POST", "PUT", "DELETE", "PATCH"].forEach(method => {
           routePermissionsMap.set(`${method}:${route.path}`, true);
@@ -42,7 +38,6 @@ const routePermissionMiddleware = async (req, res, next) => {
   if (isPublicRoute) {
     next();
   } else {
-    // Nếu không phải route công khai, chuyển sang middleware xác thực
     const authMiddleware = require('./AuthMiddleware');
     authMiddleware(req, res, next);
   }
@@ -63,7 +58,7 @@ const initializeRoutePermissions = async () => {
     if (process.env.NODE_ENV !== 'production') {
       console.log("🔄 Route permissions refreshed");
     }
-  }, 60 * 60 * 1000); // Refresh every hour
+  }, 60 * 60 * 1000); 
 };
 
 module.exports = {
