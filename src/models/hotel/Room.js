@@ -34,12 +34,14 @@ const RoomSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
- },
- facility_id : {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Facility", // Liên kết với model Hotel
-    required: true,
   },
+  facility_id: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Facility", // Liên kết với model Hotel
+      required: true,
+    },
+  ],
   created_at: {
     type: Date,
     default: Date.now,
@@ -47,6 +49,6 @@ const RoomSchema = new mongoose.Schema({
 });
 
 // Tạo model Room
-const Room = mongoose.model("Room", RoomSchema);
+const Room = mongoose.model("Room", RoomSchema, "rooms");
 
 module.exports = Room;
