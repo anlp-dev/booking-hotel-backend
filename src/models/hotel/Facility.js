@@ -17,6 +17,6 @@ const FacilitySchema = new mongoose.Schema({
 });
 
 // Tạo model Facility
-const Facility = mongoose.model("Facility", FacilitySchema);
+const Facility = mongoose.model("Facility", FacilitySchema,"facilities");
 
 module.exports = Facility;
