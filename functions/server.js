@@ -1,15 +1,15 @@
-const express = require('express');
-require('dotenv').config();
-const cors = require('cors');
-const logRequest = require('../src/middleware/LogRequestMiddleware');
-const passport = require('passport');
+const express = require("express");
+require("dotenv").config();
+const cors = require("cors");
+const logRequest = require("../src/middleware/LogRequestMiddleware");
+const passport = require("passport");
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(logRequest);
 app.use(cors());
-require('../src/configs/Auth');
+require("../src/configs/Auth");
 
 const { connect } = require('../src/database/db');
 connect();
