@@ -20,7 +20,7 @@ configViewEngine(app);
 const security = require('../src/configs/Security');
 
 (async () => {
-  await security(app); 
+  await security(app);
 
   const setupSwagger = require('../src/swagger/swagger');
   setupSwagger(app);
