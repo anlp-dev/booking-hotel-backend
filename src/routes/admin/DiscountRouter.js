@@ -67,7 +67,7 @@ router.post("/add_discount", DiscountController.createDiscount);
  *                  type: string
  *                  example: "#ff0000"
  */
-router.put("/update_discount", DiscountController.updateDiscount);
+router.put("/update_discount/:id", DiscountController.updateDiscount);
 
 /**
  * @swagger
@@ -101,7 +101,7 @@ router.get("/:id", DiscountController.getDiscountById);
  *                  type: string
  *                  example: "description"
  */
-router.delete("/delete_discount", DiscountController.deleteDiscount);
+router.delete("/delete_discount/:id", DiscountController.deleteDiscount);
 
 /**
  * @swagger
