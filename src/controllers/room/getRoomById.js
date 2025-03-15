@@ -3,7 +3,8 @@ const Room = require("../../models/hotel/Room");
 // 📌 Lấy phòng theo ID
 const getRoomById = async (req, res) => {
   try {
-    const { roomId } = req.params.roomId;
+    const { roomId } = req.params;
+
     const room = await Room.findById(roomId)
       .populate("hotel_id")
       .populate("facility_id")
@@ -18,7 +19,9 @@ const getRoomById = async (req, res) => {
       .json({ message: "Get room by id successfully", data: room });
   } catch (error) {
     console.error("Lỗi khi lấy phòng:", error);
-    throw error;
+    return res
+      .status(500)
+      .json({ message: "Lỗi server", error: error.message });
   }
 };
 
