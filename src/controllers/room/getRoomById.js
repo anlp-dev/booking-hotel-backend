@@ -15,7 +15,7 @@ const getRoomById = async (req, res) => {
     }
 
     return res
-      .status(200)
+      .status(200) 
       .json({ message: "Get room by id successfully", data: room });
   } catch (error) {
     console.error("Lỗi khi lấy phòng:", error);

@@ -12,6 +12,15 @@ class AuthControllers {
         }
     }
 
+    async loginGoogle(req, res){
+      try{
+        const resData = await authServices.loginWithGoogle(req.body);
+        resExport(MESSAGE.SUCCESS.status, MESSAGE.SUCCESS.message, resData, res);
+      }catch(e){
+        resExport(500, e.message, null, res);
+      }
+    }
+
     async getDetailUser(req, res){
         try{
             const res_data = await authServices.getUserByID(req.params.id);
