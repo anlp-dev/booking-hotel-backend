@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const secret = require('../configs/Secrets');
+require('dotenv').config();
 
 // Middleware để cấu hình session và các middleware liên quan
 const setupSessionMiddleware = (app) => {
@@ -14,7 +14,7 @@ const setupSessionMiddleware = (app) => {
   // Sử dụng express-session
   app.use(
     session({
-      secret: secret.JWT_SECRET_KEY,
+      secret: process.env.JWT_SECRET_KEY,
       resave: false,
       saveUninitialized: true,
       cookie: {

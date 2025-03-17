@@ -2,6 +2,7 @@ const express = require("express");
 const {inputValidationLogin} = require("../../middleware/InputValidation");
 const router = express.Router();
 const authController = require("../../controllers/auth/AuthControllers");
+const { loginLimiter } = require("../../middleware/RateLimitMiddleware");
 
 /**
  * @swagger
@@ -30,8 +31,8 @@ const authController = require("../../controllers/auth/AuthControllers");
  *                 type: string
  *                 example: "123456"
  */
-router.post("/login", inputValidationLogin, authController.login);
-
+router.post("/login", loginLimiter, inputValidationLogin, authController.login);
+router.post("/login-google", loginLimiter, authController.loginGoogle);
 /**
  * @swagger
  * /auth/profile/{id}:

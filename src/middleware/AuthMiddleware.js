@@ -1,10 +1,22 @@
 const jwt = require("jsonwebtoken");
 const secret = require("../configs/Secrets");
 const User = require("../models/user/User");
+require('dotenv').config();
 const {getPermissionsForUser} = require('../database/db');
 
-// Simple token blacklist for invalidated tokens
-const tokenBlacklist = new Set();
+// Improved token blacklist using Map instead of Set, with token expiry
+const tokenBlacklist = new Map();
+
+// Clean up expired tokens from blacklist every hour
+const CLEANUP_INTERVAL = 60 * 60 * 1000; // 1 hour
+setInterval(() => {
+  const now = Date.now();
+  for (const [token, expiry] of tokenBlacklist.entries()) {
+    if (now > expiry) {
+      tokenBlacklist.delete(token);
+    }
+  }
+}, CLEANUP_INTERVAL);
 
 // Simple user cache to reduce database queries
 const userCache = new Map();
@@ -55,7 +67,7 @@ const auth = async (req, res, next) => {
     
     let decoded;
     try {
-      decoded = jwt.verify(token, secret.JWT_SECRET_KEY);
+      decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         return res.status(401).json({
@@ -112,10 +124,24 @@ auth.invalidateToken = (token) => {
   if (token && token.startsWith('Bearer ')) {
     token = token.replace('Bearer ', '');
   }
-  tokenBlacklist.add(token);
   
-  // Optional: Clean up blacklist periodically to prevent memory leaks
-  // This is a simple implementation - in production, consider using Redis or another solution
+  try {
+    // Get token expiry
+    const decoded = jwt.decode(token);
+    if (decoded && decoded.exp) {
+      // Store token in blacklist with its expiry time
+      const expiryTime = decoded.exp * 1000; // Convert to milliseconds
+      tokenBlacklist.set(token, expiryTime);
+    } else {
+      // If token is invalid or can't be decoded, set a default expiry (24h)
+      const defaultExpiry = Date.now() + 24 * 60 * 60 * 1000;
+      tokenBlacklist.set(token, defaultExpiry);
+    }
+  } catch (error) {
+    // If error parsing token, set a default expiry (24h)
+    const defaultExpiry = Date.now() + 24 * 60 * 60 * 1000;
+    tokenBlacklist.set(token, defaultExpiry);
+  }
 };
 
 // Function to clear user cache (useful when user data is updated)
