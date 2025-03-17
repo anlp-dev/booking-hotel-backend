@@ -5,8 +5,12 @@ let routePermissionsCache = null;
 let routePermissionsMap = new Map();
 
 const pathToRegex = (path) => {
-  const pattern = path.replace(/:[\w]+/g, "[^/]+");
-  return new RegExp(`^${pattern}$`);
+  // Remove trailing slash if exists
+  const cleanPath = path.replace(/\/$/, '');
+  // Replace :param with regex pattern that matches any non-slash characters
+  const pattern = cleanPath.replace(/:[\w]+/g, "[^/]+");
+  // Make the trailing slash optional and allow additional segments
+  return new RegExp(`^${pattern}\/?[^/]*$`);
 };
 
 const loadRoutePermissions = async () => {
@@ -15,18 +19,19 @@ const loadRoutePermissions = async () => {
     const publicRoutes = allRoutes.filter(
       (r) => r.requireToken === false && r.status === "01"
     );
-    publicRoutes.push({ method: "GET", path: "/register/verify/:id" });
 
     routePermissionsMap.clear(); 
     publicRoutes.forEach(route => {
+      if (!route.path) return; // Skip invalid routes
+      
       const key = `${route.method}:${route.path}`;
       const regex = pathToRegex(route.path);
-      routePermissionsMap.set(key, { method: route.method, regex });
+      routePermissionsMap.set(key, { method: route.method, path: route.path, regex });
 
       if (route.method === "*") {
         ["GET", "POST", "PUT", "DELETE", "PATCH"].forEach(method => {
           const methodKey = `${method}:${route.path}`;
-          routePermissionsMap.set(methodKey, { method, regex });
+          routePermissionsMap.set(methodKey, { method, path: route.path, regex });
         });
       }
     });
@@ -41,7 +46,11 @@ const loadRoutePermissions = async () => {
 
 const routePermissionMiddleware = async (req, res, next) => {
   const isPublicRoute = Array.from(routePermissionsMap.values()).some(
-    (route) => route.method === req.method && route.regex.test(req.path)
+    (route) => {
+      if (!route || !route.path) return false;
+      const matches = route.method === req.method && route.regex.test(req.path);
+      return matches;
+    }
   );
 
   if (isPublicRoute) {

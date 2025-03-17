@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/:roomId", require("../../controllers/room/getRoomById"));
+router.get("/get-by-id/:roomId", require("../../controllers/room/getRoomById"));
 router.get("/", require("../../controllers/room/getRoomList"));
 router.post("/", require("../../controllers/room/createRoom"));
 router.put("/:roomId", require("../../controllers/room/updateRoom"));
