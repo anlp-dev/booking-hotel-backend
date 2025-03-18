@@ -1,5 +1,5 @@
 const {resExport} = require("../../enums/resExport");
-const AdminService = require("../../services/admin/AdminService")
+const AdminService = require("../../services/admin/Admin.service")
 
 class AdminController {
     async getRole (req, res){

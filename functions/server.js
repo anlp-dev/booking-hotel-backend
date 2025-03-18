@@ -6,6 +6,7 @@ const { cookieParser, handleCSRFError } = require("../src/middleware/CSRFMiddlew
 const logRequest = require("../src/middleware/LogRequestMiddleware");
 const passport = require("passport");
 const app = express();
+const { standardLimiter } = require("../src/middleware/RateLimitMiddleware");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(helmet());
 app.use(cookieParser());
 app.use(handleCSRFError);
+app.use(standardLimiter);
 require("../src/configs/Auth");
 
 const { connect } = require('../src/database/db');

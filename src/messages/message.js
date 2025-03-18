@@ -36,16 +36,6 @@ const MESSAGE_SUCCESS = {
     DELETE_REQUEST_LOG: new Message(200, 'Xóa request log thành công'),
     CREATE_ACCOUNT: new Message(200, 'Tạo mới account thành công'),
     DELETE_ACCOUNT: new Message(200, 'Xóa account thành công'),
-    CREATE_TEACHER: new Message(200, 'Tạo mới teacher thành công'),
-    DELETE_TEACHER: new Message(200, 'Xóa teacher thành công'),
-    CREATE_STUDENT: new Message(200, 'Tạo mới student thành công'),
-    DELETE_STUDENT: new Message(200, 'Xóa student thành công'),
-    CREATE_CLASS: new Message(200, 'Tạo mới class thành công'),
-    DELETE_CLASS: new Message(200, 'Xóa class thông'),
-    GET_COURSE: new Message(200, 'Lấy danh sách môn học thành công'),
-    CREATE_COURSE: new Message(200, 'Thêm mới môn học thành công'),
-    DELETE_COURSE: new Message(200, 'Xóa môn học thành công'),
-    UPDATE_COURSE: new Message(200, 'Cập nhật môn học thành công'),
 };
 
 const MESSAGE_FAIL = {
@@ -73,16 +63,6 @@ const MESSAGE_FAIL = {
     DELETE_REQUEST_LOG: new Message(400, 'Xóa request log thất bại'),
     CREATE_ACCOUNT: new Message(400, 'Tạo mới account thất bại'),
     DELETE_ACCOUNT: new Message(400, 'Xóa account thất bại'),
-    CREATE_TEACHER: new Message(400, 'Tạo bạn teacher thất bại'),
-    DELETE_TEACHER: new Message(400, 'Xóa teacher thất bại'),
-    CREATE_STUDENT: new Message(400, 'Tạo mới student thất bại'),
-    DELETE_STUDENT: new Message(400, 'Xóa student thất bại'),
-    CREATE_CLASS: new Message(400, 'Tạo mới class thất bại'),
-    DELETE_CLASS: new Message(400, 'Xóa class thất bại'),
-    GET_COURSE: new Message(400, 'Lấy danh sách môn học thất bại'),
-    CREATE_COURSE: new Message(400, 'Tạo mới môn học thất bại'),
-    DELETE_COURSE: new Message(400, 'Xóa môn học thất bại'),
-    EDIT_COURSE: new Message(400, 'Cập nhật môn học thất bại'),
 };
 
 // Export tất cả các đối tượng dưới một đối tượng duy nhất

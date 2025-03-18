@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const authRouter = require("./auth/AuthRouter");
-const ProfileRoute = require("./user/ProfileRotes");
-const DiscountRouter = require("./admin/DiscountRouter");
-const adminRouter = require("./admin/AdminRouter");
-const paymentRouter = require("./payment/PaymentRouter");
-const systemRouter = require("./system/SystemRouter");
-const roomRouter = require("./room/RoomRouter");
-const RegisterRouter = require("./register/RegisterRouter");
-const bookingRouter = require("./booking/BookingRouter");
+const authRouter = require("./auth/Auth.route");
+const ProfileRoute = require("./user/Profile.route");
+const DiscountRouter = require("./admin/Discount.route");
+const adminRouter = require("./admin/Admin.route");
+const paymentRouter = require("./payment/Payment.route");
+const systemRouter = require("./system/System.route");
+const roomRouter = require("./room/Room.route");
+const RegisterRouter = require("./register/Register.route");
+const bookingRouter = require("./booking/Booking.route");
 
 router.use("/admin", adminRouter);
 router.use("/admin_discount", DiscountRouter);
