@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const RoomController = require("../../controllers/room/roomController");
+const RoomController = require("../../controllers/room/Room.controller");
 
 
 router.get("/:roomId", RoomController.getRoomById);
