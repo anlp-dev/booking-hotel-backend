@@ -1,22 +1,9 @@
 const jwt = require("jsonwebtoken");
 const secret = require("../configs/Secrets");
 const User = require("../models/user/User");
+const BlacklistedToken = require("../models/token/BlacklistedToken");
 require('dotenv').config();
 const {getPermissionsForUser} = require('../database/db');
-
-// Improved token blacklist using Map instead of Set, with token expiry
-const tokenBlacklist = new Map();
-
-// Clean up expired tokens from blacklist every hour
-const CLEANUP_INTERVAL = 60 * 60 * 1000; // 1 hour
-setInterval(() => {
-  const now = Date.now();
-  for (const [token, expiry] of tokenBlacklist.entries()) {
-    if (now > expiry) {
-      tokenBlacklist.delete(token);
-    }
-  }
-}, CLEANUP_INTERVAL);
 
 // Simple user cache to reduce database queries
 const userCache = new Map();
@@ -44,6 +31,18 @@ const getUserById = async (userId) => {
   return user;
 };
 
+// Check if a token is blacklisted
+const isTokenBlacklisted = async (token) => {
+  try {
+    // Kiểm tra trong database
+    const exists = await BlacklistedToken.exists({ token });
+    return !!exists;
+  } catch (error) {
+    console.error('Error checking blacklisted token:', error);
+    return false;
+  }
+};
+
 const auth = async (req, res, next) => {
   try {
     const authHeader = req.header("Authorization");
@@ -58,7 +57,7 @@ const auth = async (req, res, next) => {
     const token = authHeader.replace("Bearer ", "");
     
     // Check if token is blacklisted
-    if (tokenBlacklist.has(token)) {
+    if (await isTokenBlacklisted(token)) {
       return res.status(401).json({
         status: 401,
         message: "Unauthorized: Token has been invalidated",
@@ -119,28 +118,31 @@ const auth = async (req, res, next) => {
   }
 };
 
-// Function to invalidate a token (for logout)
-auth.invalidateToken = (token) => {
+
+auth.invalidateToken = async (token) => {
   if (token && token.startsWith('Bearer ')) {
     token = token.replace('Bearer ', '');
   }
   
   try {
-    // Get token expiry
-    const decoded = jwt.decode(token);
-    if (decoded && decoded.exp) {
-      // Store token in blacklist with its expiry time
-      const expiryTime = decoded.exp * 1000; // Convert to milliseconds
-      tokenBlacklist.set(token, expiryTime);
-    } else {
-      // If token is invalid or can't be decoded, set a default expiry (24h)
-      const defaultExpiry = Date.now() + 24 * 60 * 60 * 1000;
-      tokenBlacklist.set(token, defaultExpiry);
+    let expiryDate;
+    try {
+      const decoded = jwt.decode(token);
+      if (decoded && decoded.exp) {
+        expiryDate = new Date(decoded.exp * 1000);
+      } else {
+        expiryDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      }
+    } catch (error) {
+      expiryDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
     }
+
+    await BlacklistedToken.create({
+      token,
+      expiresAt: expiryDate
+    });
   } catch (error) {
-    // If error parsing token, set a default expiry (24h)
-    const defaultExpiry = Date.now() + 24 * 60 * 60 * 1000;
-    tokenBlacklist.set(token, defaultExpiry);
+    console.error('Error invalidating token:', error);
   }
 };
 
@@ -152,5 +154,20 @@ auth.clearUserCache = (userId) => {
     userCache.clear();
   }
 };
+
+// Tạo scheduled job để dọn blacklist
+const cleanupBlacklist = async () => {
+  try {
+    // Xóa token đã hết hạn
+    await BlacklistedToken.deleteMany({
+      expiresAt: { $lt: new Date() }
+    });
+  } catch (error) {
+    console.error('Error cleaning up blacklist:', error);
+  }
+};
+
+// Chạy job cleanup mỗi ngày
+setInterval(cleanupBlacklist, 24 * 60 * 60 * 1000);
 
 module.exports = auth;

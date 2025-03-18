@@ -1,5 +1,5 @@
 const {resExport} = require("../../enums/resExport");
-const DiscountService = require("../../services/admin/DiscountService");
+const DiscountService = require("../../services/admin/Discount.service");
 
 class DiscountController {
     async getDiscount (req, res){

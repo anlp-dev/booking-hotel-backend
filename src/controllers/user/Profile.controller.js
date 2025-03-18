@@ -2,7 +2,7 @@ const { resExport } = require("../../enums/resExport");
 const User = require("../../models/user/User");
 const Role = require("../../models/user/Role");
 const bcrypt = require('bcryptjs');
-class ProfileControllers {
+class ProfileController {
     async getProfile(req, res) {
         try {
             const resData = await User.find().populate('roleId');
@@ -77,4 +77,4 @@ class ProfileControllers {
         }
 }
 
-module.exports = new ProfileControllers();
+module.exports = new ProfileController();

@@ -4,7 +4,9 @@ function checkPermission(permission){
   return async function (req, res, next) {
     try {
       const userPermissions = await getPermissionsForUser(req.account.userId);
-      if (userPermissions.includes(permission)) {
+      
+      const checkPermission = userPermissions.some(permission => permission.includes(permission));
+      if (checkPermission) {
         next();
       } else {
         res.status(403).json({

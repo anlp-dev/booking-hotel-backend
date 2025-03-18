@@ -15,6 +15,8 @@ const User = new Schema(
     first_name: { type: String, default: null },
     last_name: { type: String, default: null },
     phone: { type: String, default: null },
+    city: { type: String, default: null },
+    country: { type: String, default: "Việt Nam" },
     address: { type: String, default: "" },
     status: { type: String, default: "00" },
     avatar: { type: String, default: "" }, // Ảnh đại diện

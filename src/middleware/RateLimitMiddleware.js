@@ -1,9 +1,9 @@
 const rateLimit = require('express-rate-limit');
 
-// Giới hạn request cho các API thông thường
+
 const standardLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 phút
-  max: 100, // Giới hạn mỗi IP tối đa 100 request trong 15 phút
+  windowMs: 15 * 60 * 1000,
+  max: 100, 
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -12,10 +12,10 @@ const standardLimiter = rateLimit({
   }
 });
 
-// Giới hạn nghiêm ngặt hơn cho API login để ngăn chặn tấn công brute force
+
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phút
-  max: 5, // Giới hạn mỗi IP tối đa 5 request đăng nhập trong 15 phút
+  max: 20, // Giới hạn mỗi IP tối đa 20 request đăng nhập trong 15 phút
   standardHeaders: true,
   legacyHeaders: false,
   message: {

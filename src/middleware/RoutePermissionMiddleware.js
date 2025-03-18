@@ -5,11 +5,8 @@ let routePermissionsCache = null;
 let routePermissionsMap = new Map();
 
 const pathToRegex = (path) => {
-  // Remove trailing slash if exists
   const cleanPath = path.replace(/\/$/, '');
-  // Replace :param with regex pattern that matches any non-slash characters
   const pattern = cleanPath.replace(/:[\w]+/g, "[^/]+");
-  // Make the trailing slash optional and allow additional segments
   return new RegExp(`^${pattern}\/?[^/]*$`);
 };
 

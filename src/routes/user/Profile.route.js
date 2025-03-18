@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ProfileControllers = require('../../controllers/user/ProfileControllers');
+const ProfileControllers = require('../../controllers/user/Profile.controller');
 
 router.get('/', ProfileControllers.getProfile);
 router.get('/:id', ProfileControllers.getProfileById);

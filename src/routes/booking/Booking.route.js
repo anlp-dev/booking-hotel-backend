@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const BookingController = require("../../controllers/booking/Booking.controller");
 
 // Define routes
 /**
@@ -15,5 +16,8 @@ router.get("/:userId", require("../../controllers/booking/getBookingByUser"));
  * @access Private (Admin or Owner)
  */
 router.get("/:id", require("../../controllers/booking/getBookingById"));
+
+router.post("/create", BookingController.createBooking);
+router.put("/update-status", BookingController.updateStatusBooking);
 
 module.exports = router;

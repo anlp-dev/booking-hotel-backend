@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const AdminController = require("../../controllers/admin/AdminControllers");
-const FacilityControllers = require("../../controllers/facility/FacilityControllers"); // Controller mới cho facility
+const AdminController = require("../../controllers/admin/Admin.controller");
+const FacilityControllers = require("../../controllers/facility/Facility.controller"); // Controller mới cho facility
+const { checkPermission } = require("../../middleware/AuthPermission");
 
 /**
  * @swagger
@@ -17,7 +18,7 @@ const FacilityControllers = require("../../controllers/facility/FacilityControll
  *     summary: Lấy danh sách vai trò (roles)
  *     tags: [Admin]
  */
-router.get("/role", AdminController.getRole);
+router.get("/role", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.getRole);
 
 /**
  * @swagger
@@ -45,7 +46,7 @@ router.get("/role", AdminController.getRole);
  *                  type: string
  *                  example: "#ff0000"
  */
-router.post("/role", AdminController.createRole);
+router.post("/role", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.createRole);
 
 /**
  * @swagger
@@ -70,7 +71,7 @@ router.post("/role", AdminController.createRole);
  *                  type: string
  *                  example: "#ff0000"
  */
-router.put("/role", AdminController.updateRole);
+router.put("/role", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.updateRole);
 
 /**
  * @swagger
@@ -104,7 +105,7 @@ router.get("/permission", AdminController.getPermission);
  *                  type: string
  *                  example: "description"
  */
-router.post("/permission", AdminController.createPermission);
+router.post("/permission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.createPermission);
 
 /**
  * @swagger
@@ -113,7 +114,7 @@ router.post("/permission", AdminController.createPermission);
  *     summary: Lấy danh sách quyền theo vai trò (role-permissions)
  *     tags: [Admin]
  */
-router.get("/rolePermission", AdminController.getRolePermission);
+router.get("/rolePermission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.getRolePermission);
 
 /**
  * @swagger
@@ -135,7 +136,7 @@ router.get("/rolePermission", AdminController.getRolePermission);
  *                 type: array
  *                 example: ["PERMISSION_CODE_1", "PERMISSION_CODE_2"]
  */
-router.put("/rolePermission", AdminController.updateRolePermission);
+router.put("/rolePermission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.updateRolePermission);
 
 // Thêm các route cho quản lý vật tư (facility) cùng với Swagger
 
