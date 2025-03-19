@@ -10,14 +10,14 @@ const roomRouter = require("./room/Room.route");
 const RegisterRouter = require("./register/Register.route");
 const bookingRouter = require("./booking/Booking.route");
 
-router.use("/admin", adminRouter);
-router.use("/admin_discount", DiscountRouter);
-router.use("/auth", authRouter);
-router.use("/user", ProfileRoute);
-router.use("/payment", paymentRouter);
-router.use("/system", systemRouter);
-router.use("/room", roomRouter);
-router.use("/register", RegisterRouter);
-router.use("/booking", bookingRouter);
+router.use("/api/admin", adminRouter);
+router.use("/api/admin_discount", DiscountRouter);
+router.use("/api/auth", authRouter);
+router.use("/api/user", ProfileRoute);
+router.use("/api/payment", paymentRouter);
+router.use("/api/system", systemRouter);
+router.use("/api/room", roomRouter);
+router.use("/api/register", RegisterRouter);
+router.use("/api/booking", bookingRouter);
 
 module.exports = router;
