@@ -1,6 +1,6 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
-const RegisterService = require("../../services/register/RegisterService");
+const RegisterService = require("../../services/register/Register.service");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const Role = require("../../models/user/Role"); // Import model Role

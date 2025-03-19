@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const User = require('../models/user/User');
+const RolePermission = require('../models/user/RolePermission');
+const Permission = require('../models/user/Permission');
+const Role = require('../models/user/Role');
 require('dotenv').config()
 async function connect(){
   try {
@@ -28,4 +31,4 @@ async function getPermissionsForUser(userId){
   }
 }
 
-module.exports = {connect};
+module.exports = {connect, getPermissionsForUser};

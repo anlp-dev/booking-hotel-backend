@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const RoomSchema = new mongoose.Schema({
   hotel_id: {
     type: mongoose.Schema.Types.ObjectId,

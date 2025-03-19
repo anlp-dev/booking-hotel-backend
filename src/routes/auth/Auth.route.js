@@ -1,7 +1,9 @@
 const express = require("express");
 const {inputValidationLogin} = require("../../middleware/InputValidation");
 const router = express.Router();
-const authController = require("../../controllers/auth/AuthControllers");
+const authController = require("../../controllers/auth/Auth.controller");
+const { loginLimiter } = require("../../middleware/RateLimitMiddleware");
+const auth = require("../../middleware/AuthMiddleware");
 
 /**
  * @swagger
@@ -30,7 +32,26 @@ const authController = require("../../controllers/auth/AuthControllers");
  *                 type: string
  *                 example: "123456"
  */
-router.post("/login", inputValidationLogin, authController.login);
+router.post("/login", loginLimiter, inputValidationLogin, authController.login);
+router.post("/login-google", loginLimiter, authController.loginGoogle);
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     summary: Đăng xuất người dùng
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Đăng xuất thành công
+ *       401:
+ *         description: Không có token xác thực
+ *       500:
+ *         description: Lỗi server
+ */
+router.post("/logout", auth, authController.logout);
 
 /**
  * @swagger

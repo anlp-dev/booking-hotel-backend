@@ -1,5 +1,5 @@
 const { resExport } = require("../../enums/resExport");
-const systemService = require("../../services/system/SystemService")
+const systemService = require("../../services/system/System.service")
 
 class SystemController {
   async getRouter(req, res){

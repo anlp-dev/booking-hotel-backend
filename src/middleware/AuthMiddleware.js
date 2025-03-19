@@ -1,10 +1,9 @@
 const jwt = require("jsonwebtoken");
 const secret = require("../configs/Secrets");
 const User = require("../models/user/User");
+const BlacklistedToken = require("../models/token/BlacklistedToken");
+require('dotenv').config();
 const {getPermissionsForUser} = require('../database/db');
-
-// Simple token blacklist for invalidated tokens
-const tokenBlacklist = new Set();
 
 // Simple user cache to reduce database queries
 const userCache = new Map();
@@ -32,6 +31,18 @@ const getUserById = async (userId) => {
   return user;
 };
 
+// Check if a token is blacklisted
+const isTokenBlacklisted = async (token) => {
+  try {
+    // Kiểm tra trong database
+    const exists = await BlacklistedToken.exists({ token });
+    return !!exists;
+  } catch (error) {
+    console.error('Error checking blacklisted token:', error);
+    return false;
+  }
+};
+
 const auth = async (req, res, next) => {
   try {
     const authHeader = req.header("Authorization");
@@ -46,7 +57,7 @@ const auth = async (req, res, next) => {
     const token = authHeader.replace("Bearer ", "");
     
     // Check if token is blacklisted
-    if (tokenBlacklist.has(token)) {
+    if (await isTokenBlacklisted(token)) {
       return res.status(401).json({
         status: 401,
         message: "Unauthorized: Token has been invalidated",
@@ -55,7 +66,7 @@ const auth = async (req, res, next) => {
     
     let decoded;
     try {
-      decoded = jwt.verify(token, secret.JWT_SECRET_KEY);
+      decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         return res.status(401).json({
@@ -107,15 +118,32 @@ const auth = async (req, res, next) => {
   }
 };
 
-// Function to invalidate a token (for logout)
-auth.invalidateToken = (token) => {
+
+auth.invalidateToken = async (token) => {
   if (token && token.startsWith('Bearer ')) {
     token = token.replace('Bearer ', '');
   }
-  tokenBlacklist.add(token);
   
-  // Optional: Clean up blacklist periodically to prevent memory leaks
-  // This is a simple implementation - in production, consider using Redis or another solution
+  try {
+    let expiryDate;
+    try {
+      const decoded = jwt.decode(token);
+      if (decoded && decoded.exp) {
+        expiryDate = new Date(decoded.exp * 1000);
+      } else {
+        expiryDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      }
+    } catch (error) {
+      expiryDate = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    }
+
+    await BlacklistedToken.create({
+      token,
+      expiresAt: expiryDate
+    });
+  } catch (error) {
+    console.error('Error invalidating token:', error);
+  }
 };
 
 // Function to clear user cache (useful when user data is updated)
@@ -126,5 +154,20 @@ auth.clearUserCache = (userId) => {
     userCache.clear();
   }
 };
+
+// Tạo scheduled job để dọn blacklist
+const cleanupBlacklist = async () => {
+  try {
+    // Xóa token đã hết hạn
+    await BlacklistedToken.deleteMany({
+      expiresAt: { $lt: new Date() }
+    });
+  } catch (error) {
+    console.error('Error cleaning up blacklist:', error);
+  }
+};
+
+// Chạy job cleanup mỗi ngày
+setInterval(cleanupBlacklist, 24 * 60 * 60 * 1000);
 
 module.exports = auth;

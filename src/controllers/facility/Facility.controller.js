@@ -1,5 +1,5 @@
 // controllers/facilityController.js
-const FacilityService = require("../../services/facility/FacilityService");
+const FacilityService = require("../../services/facility/Facility.service");
 
 const getAllFacilities = async (req, res) => {
   try {

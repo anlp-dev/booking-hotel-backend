@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const DiscountController = require("../../controllers/admin/DiscountControllers");
-
+const DiscountController = require("../../controllers/admin/Discount.controller");
+const { checkPermission } = require("../../middleware/AuthPermission");
 /**
  * @swagger
  * tags:
@@ -16,7 +16,7 @@ const DiscountController = require("../../controllers/admin/DiscountControllers"
  *     summary: Lấy danh sách vai trò (roles)
  *     tags: [Admin]
  */
-router.get("/list_discount", DiscountController.getDiscount);
+router.get("/list_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.getDiscount);
 /**
  * @swagger
  * /admin/role:
@@ -43,7 +43,7 @@ router.get("/list_discount", DiscountController.getDiscount);
  *                  type: string
  *                  example: "#ff0000"
  */
-router.post("/add_discount", DiscountController.createDiscount);
+router.post("/add_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.createDiscount);
 /**
  * @swagger
  * /admin/role:
@@ -67,7 +67,7 @@ router.post("/add_discount", DiscountController.createDiscount);
  *                  type: string
  *                  example: "#ff0000"
  */
-router.put("/update_discount/:id", DiscountController.updateDiscount);
+router.put("/update_discount/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.updateDiscount);
 
 /**
  * @swagger
@@ -76,7 +76,7 @@ router.put("/update_discount/:id", DiscountController.updateDiscount);
  *     summary: Lấy danh sách quyền (permissions)
  *     tags: [Admin]
  */
-router.get("/:id", DiscountController.getDiscountById);
+router.get("/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.getDiscountById);
 
 /**
  * @swagger
@@ -101,7 +101,7 @@ router.get("/:id", DiscountController.getDiscountById);
  *                  type: string
  *                  example: "description"
  */
-router.delete("/delete_discount/:id", DiscountController.deleteDiscount);
+router.delete("/delete_discount/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.deleteDiscount);
 
 /**
  * @swagger

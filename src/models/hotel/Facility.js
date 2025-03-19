@@ -1,13 +1,15 @@
 const mongoose = require("mongoose");
 
 const FacilitySchema = new mongoose.Schema({
-  
   name: {
     type: String,
     required: true,
     maxlength: 255,
   },
   description: {
+    type: String,
+  },
+  image: {
     type: String,
   },
   created_at: {
@@ -17,6 +19,6 @@ const FacilitySchema = new mongoose.Schema({
 });
 
 // Tạo model Facility
-const Facility = mongoose.model("Facility", FacilitySchema,"facilities");
+const Facility = mongoose.model("Facility", FacilitySchema, "facilities");
 
 module.exports = Facility;

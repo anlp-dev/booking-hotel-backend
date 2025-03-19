@@ -11,6 +11,10 @@ const BookingSchema = new mongoose.Schema({
     ref: "Room", // Liên kết với model Room
     required: true,
   },
+  code: {
+    type: String,
+    required: true
+  },
   check_in: {
     type: Date,
     required: true,
@@ -34,6 +38,10 @@ const BookingSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default:false
+  },
+  note:{
+    type: String,
+    default: "",
   },
   created_at: {
     type: Date,
