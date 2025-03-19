@@ -1,33 +1,13 @@
 const authServices = require('../../services/auth/AuthService');
 const {resExport} = require("../../enums/resExport");
 const {MESSAGE} = require("../../messages/message");
-const auth = require('../../middleware/AuthMiddleware');
 
-class AuthController {
+class AuthControllers {
     async login (req, res){
         try{
             const resData = await authServices.login(req.body);
             resExport(MESSAGE.SUCCESS.status, MESSAGE.SUCCESS.message, resData, res);
         }catch (e) {
-            resExport(500, e.message, null, res);
-        }
-    }
-
-    async loginGoogle(req, res){
-      try{
-        const resData = await authServices.loginWithGoogle(req.body);
-        resExport(MESSAGE.SUCCESS.status, MESSAGE.SUCCESS.message, resData, res);
-      }catch(e){
-        resExport(500, e.message, null, res);
-      }
-    }
-
-    async logout(req, res) {
-        try {
-            const token = req.header('Authorization');
-            await auth.invalidateToken(token);
-            resExport(MESSAGE.SUCCESS.status, "Đăng xuất thành công", null, res);
-        } catch (e) {
             resExport(500, e.message, null, res);
         }
     }
@@ -42,4 +22,4 @@ class AuthController {
     }
 }
 
-module.exports = new AuthController();
+module.exports = new AuthControllers();

@@ -67,7 +67,7 @@ router.post("/add_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]
  *                  type: string
  *                  example: "#ff0000"
  */
-router.put("/update_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.updateDiscount);
+router.put("/update_discount/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.updateDiscount);
 
 /**
  * @swagger
@@ -101,7 +101,14 @@ router.get("/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), Discoun
  *                  type: string
  *                  example: "description"
  */
-router.delete("/delete_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.deleteDiscount);
+router.delete("/delete_discount/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.deleteDiscount);
 
+/**
+ * @swagger
+ * /admin/rolePermission:
+ *   get:
+ *     summary: Lấy danh sách quyền theo vai trò (role-permissions)
+ *     tags: [Admin]
+ */
 
 module.exports = router;

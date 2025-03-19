@@ -27,18 +27,10 @@ const DiscountSchema = new mongoose.Schema({
     enum: ["active", "expired", "disabled"],
     required: true,
     default: "active",
-  },
-  created_at: {
-    type: Date,
-    default: Date.now,
-  },
-  update_at: {
-    type: Date,
-    default: Date.now,
-  },
+  }
 });
 
 // Tạo model Discount
-const Discount = mongoose.model("Discount", DiscountSchema);
+const Discount = mongoose.model("Discount", DiscountSchema, "discounts");
 
 module.exports = Discount;
