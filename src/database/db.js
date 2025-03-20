@@ -16,7 +16,6 @@ async function connect(){
 async function getPermissionsForUser(userId){
   try {
     const account = await User.findById(userId);
-    console.log(account)
     if(!account){
       return [];
     }
