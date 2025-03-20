@@ -1,7 +1,13 @@
 const querystring = require("qs");
 const crypto = require("crypto")
+const Payment = require("../../models/hotel/Payment");
 
 class PaymentService {
+
+    async getAllPayments() {  
+        return await Payment.find();
+    }
+      
   constructor() {
     this.vnpTmnCode = "PM4KZ9GU";
     this.vnpHashSecret = "E2VAY4DNJTQ7544ENWZA1GNKMFULXKG1";
@@ -83,6 +89,8 @@ createPaymentUrl(dataReq) {
         throw new Error(e.message);
     }
 }
+
+
 }
 
 module.exports = new PaymentService();
