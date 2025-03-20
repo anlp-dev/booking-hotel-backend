@@ -42,6 +42,10 @@ const RoomSchema = new mongoose.Schema({
     },
   ],
   images: [{ type: String }],
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
   created_at: {
     type: Date,
     default: Date.now,

@@ -167,7 +167,9 @@ class BookingService {
         .populate("user_id") // Lấy thông tin user (chỉ username và email)
         .populate({
           path: "room_id",
-          populate: [{ path: "hotel_id" }, { path: "facility_id" }],
+          populate: {
+            path: "hotel_id",
+          },
         }); // Lấy thông tin phòng
 
       if (!bookings) {

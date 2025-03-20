@@ -154,7 +154,7 @@ class BookingService {
 
       return booking;
     } catch (error) {
-      throw new Error(error);
+      throw new Error(e);
     }
   }
 
@@ -167,7 +167,9 @@ class BookingService {
         .populate("user_id") // Lấy thông tin user (chỉ username và email)
         .populate({
           path: "room_id",
-          populate: [{ path: "hotel_id" }, { path: "facility_id" }],
+          populate: {
+            path: "room_id",
+          },
         }); // Lấy thông tin phòng
 
       if (!bookings) {
@@ -175,7 +177,7 @@ class BookingService {
       }
       return bookings;
     } catch (error) {
-      throw new Error(error);
+      throw new Error(e);
     }
   }
 }

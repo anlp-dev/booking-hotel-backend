@@ -8,14 +8,14 @@ const BookingController = require("../../controllers/booking/Booking.controller"
  * @description Get all bookings
  * @access Private (Admin)
  */
-router.get("/:userId", require("../../controllers/booking/getBookingByUser"));
+router.get("/user/:userId", BookingController.getBookingByUser);
 
 /**
  * @route GET /api/booking/:id
  * @description Get booking by ID
  * @access Private (Admin or Owner)
  */
-router.get("/:id", require("../../controllers/booking/getBookingById"));
+router.get("/:id", BookingController.getBoookingById);
 
 router.post("/create", BookingController.createBooking);
 router.put("/update-status", BookingController.updateStatusBooking);
