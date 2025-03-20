@@ -4,8 +4,8 @@ function checkPermission(permission){
   return async function (req, res, next) {
     try {
       const userPermissions = await getPermissionsForUser(req.account.userId);
-      
-      const checkPermission = userPermissions.some(permission => permission.includes(permission));
+
+      const checkPermission = userPermissions.some(permissions => permission.includes(permissions));
       if (checkPermission) {
         next();
       } else {

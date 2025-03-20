@@ -53,8 +53,8 @@ const routePermissionMiddleware = async (req, res, next) => {
   if (isPublicRoute) {
     next();
   } else {
-    const authMiddleware = require('./AuthMiddleware');
-    await authMiddleware(req, res, next);
+    const auth = require('./AuthMiddleware');
+    await auth(req, res, next);
   }
 };
 
