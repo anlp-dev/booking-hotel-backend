@@ -54,7 +54,7 @@ const routePermissionMiddleware = async (req, res, next) => {
     next();
   } else {
     const authMiddleware = require('./AuthMiddleware');
-    authMiddleware(req, res, next);
+    await authMiddleware(req, res, next);
   }
 };
 

@@ -76,7 +76,7 @@ const auth = async (req, res, next) => {
       }
       throw error;
     }
-    
+
     if (!decoded || !decoded.userId) {
       return res.status(401).json({
         status: 401,
@@ -106,7 +106,6 @@ const auth = async (req, res, next) => {
         message: "Tài khoản đã bị khóa hoặc vô hiệu hóa !",
       });
     }
-
     req.account = decoded;
     req.user = user; // Add user object to request for convenience
     next();

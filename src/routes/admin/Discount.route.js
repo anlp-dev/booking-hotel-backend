@@ -16,7 +16,7 @@ const { checkPermission } = require("../../middleware/AuthPermission");
  *     summary: Lấy danh sách vai trò (roles)
  *     tags: [Admin]
  */
-router.get("/list_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.getDiscount);
+router.get("/list_discount", DiscountController.getDiscount);
 /**
  * @swagger
  * /admin/role:
@@ -43,7 +43,7 @@ router.get("/list_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]
  *                  type: string
  *                  example: "#ff0000"
  */
-router.post("/add_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.createDiscount);
+router.post("/add_discount", DiscountController.createDiscount);
 /**
  * @swagger
  * /admin/role:
@@ -67,7 +67,7 @@ router.post("/add_discount", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]
  *                  type: string
  *                  example: "#ff0000"
  */
-router.put("/update_discount/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.updateDiscount);
+router.put("/update_discount/:id", DiscountController.updateDiscount);
 
 /**
  * @swagger
@@ -76,7 +76,7 @@ router.put("/update_discount/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_A
  *     summary: Lấy danh sách quyền (permissions)
  *     tags: [Admin]
  */
-router.get("/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.getDiscountById);
+router.get("/:id", DiscountController.getDiscountById);
 
 /**
  * @swagger
@@ -101,7 +101,7 @@ router.get("/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), Discoun
  *                  type: string
  *                  example: "description"
  */
-router.delete("/delete_discount/:id", checkPermission(["SUPER", "MANAGER_DISCOUNT_ADMIN"]), DiscountController.deleteDiscount);
+router.delete("/delete_discount/:id", DiscountController.deleteDiscount);
 
 /**
  * @swagger
