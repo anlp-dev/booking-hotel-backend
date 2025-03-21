@@ -68,6 +68,12 @@ router.post("/logout", auth, authController.logout);
  *         example: 1
  */
 router.get("/profile/:id", authController.getDetailUser);
-
+router.put("/update_fullname/:id", authController.updateNameUser);
+router.put("/update_username/:id", authController.updateUsername);
+router.put("/update_email/:id", authController.updateEmail);
+router.put("/update_phone/:id", authController.updatePhone);
+router.put("/update_address/:id", authController.updateAddress);
+router.put("/update_Gender/:id", authController.updateGender);
+router.put("/update_Dob/:id", authController.updateDob);
 
 module.exports = router;
