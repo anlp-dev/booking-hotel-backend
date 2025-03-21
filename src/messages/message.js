@@ -8,7 +8,7 @@ class Message {
 const MESSAGE = {
     SUCCESS: new Message(200, 'Thành công!!'),
     FAIL: new Message(201, 'Thất bại!!'),
-    ERROR: new Message(400, 'Lỗi!!!!!!'),
+    ERROR: new Message(500, 'Lỗi!!!!!!'),
 };
 
 const MESSAGE_SUCCESS = {

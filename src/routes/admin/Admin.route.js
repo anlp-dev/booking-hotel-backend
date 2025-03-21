@@ -138,5 +138,138 @@ router.get("/rolePermission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), 
  */
 router.put("/rolePermission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.updateRolePermission);
 
+/**
+ * @swagger
+ * /admin/booking:
+ *   get:
+ *     summary: Lấy tất cả đơn đặt phòng
+ *     tags: [Admin]
+ *     responses:
+ *       200:
+ *         description: Trả về danh sách đơn đặt phòng
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   userId:
+ *                     type: string
+ *                   facilityId:
+ *                     type: string
+ *                   startTime:
+ *                     type: string
+ *                     format: date-time
+ *                   endTime:
+ *                     type: string
+ *                     format: date-time
+ *                   status:
+ *                     type: string
+ *                     enum: [PENDING, APPROVED, REJECTED, COMPLETED]
+ */
+router.get("/booking", checkPermission(["SUPER", "MANAGER_BOOKING_ADMIN"]), AdminController.getAllBooking);
+
+/**
+ * @swagger
+ * /admin/booking:
+ *   post:
+ *     summary: Tạo mới đơn đặt phòng
+ *     tags: [Admin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userId:
+ *                 type: string
+ *                 example: "user123"
+ *               facilityId:
+ *                 type: string
+ *                 example: "facility456"
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-21T09:00:00Z"
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-21T12:00:00Z"
+ *               notes:
+ *                 type: string
+ *                 example: "Họp ban quản lý"
+ *     responses:
+ *       201:
+ *         description: Tạo mới đơn đặt phòng thành công
+ *       400:
+ *         description: Dữ liệu không hợp lệ
+ */
+router.post("/booking", checkPermission(["SUPER", "MANAGER_BOOKING_ADMIN"]), AdminController.createNewBooking);
+
+/**
+ * @swagger
+ * /admin/booking:
+ *   put:
+ *     summary: Cập nhật đơn đặt phòng
+ *     tags: [Admin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 example: "booking789"
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, APPROVED, REJECTED, COMPLETED]
+ *                 example: "APPROVED"
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-21T10:00:00Z"
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-21T13:00:00Z"
+ *               notes:
+ *                 type: string
+ *                 example: "Cập nhật thời gian họp"
+ *     responses:
+ *       200:
+ *         description: Cập nhật đơn đặt phòng thành công
+ *       400:
+ *         description: Dữ liệu không hợp lệ
+ *       404:
+ *         description: Không tìm thấy đơn đặt phòng
+ */
+router.put("/booking", checkPermission(["SUPER", "MANAGER_BOOKING_ADMIN"]), AdminController.updateBooking);
+
+/**
+ * @swagger
+ * /admin/booking/{id}:
+ *   get:
+ *     summary: Xóa đơn đặt phòng theo ID
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID của đơn đặt phòng
+ *     responses:
+ *       200:
+ *         description: Xóa đơn đặt phòng thành công
+ *       404:
+ *         description: Không tìm thấy đơn đặt phòng
+ */
+router.get("/booking/:id", checkPermission(["SUPER", "MANAGER_BOOKING_ADMIN"]), AdminController.deleteBooking);
 
 module.exports = router;
