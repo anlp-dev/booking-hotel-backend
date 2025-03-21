@@ -75,5 +75,6 @@ router.put("/update_phone/:id", authController.updatePhone);
 router.put("/update_address/:id", authController.updateAddress);
 router.put("/update_Gender/:id", authController.updateGender);
 router.put("/update_Dob/:id", authController.updateDob);
+router.put("/update_avatar/:id", authController.updateAvatar);
 
 module.exports = router;

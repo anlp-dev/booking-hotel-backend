@@ -146,10 +146,33 @@ class authService {
         throw new Error("User is not found");
       }
       const checkdata = await User.findOne({email: email});
-      if(!checkdata){
+      if(checkdata){
         throw new Error("email đã tồn tại");
       }
       data.email = email;
+      await data.save();
+      return data;
+
+      
+      
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+  }
+
+  async updateAvatar(id, Data){
+    try {
+      const { avatar} = Data;
+      if(!id || !avatar){
+        throw new Error("All fields are required");
+      }
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+      
+      data.avatar = avatar;
       await data.save();
       return data;
 
@@ -172,7 +195,7 @@ class authService {
         throw new Error("User is not found");
       }
       const checkdata = await User.findOne({phone: phone});
-      if(!checkdata){
+      if(checkdata){
         throw new Error("phone đã tồn tại");
       }
       data.phone = phone;

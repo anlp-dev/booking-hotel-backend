@@ -67,6 +67,15 @@ class AuthController {
           resExport(500, error.message, null, res);
         }
       }
+
+      async updateAvatar(req, res){
+        try {
+          const resData = await authServices.updateAvatar(req.params.id,req.body);
+          resExport(200, 'Avatar updated successfully', resData, res);
+        }catch(error){
+          resExport(500, error.message, null, res);
+        }
+      }
       async updatePhone(req, res){
         try {
           const resData = await authServices.updatePhone(req.params.id,req.body);
