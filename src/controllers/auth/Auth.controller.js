@@ -105,7 +105,7 @@ class AuthController {
 
       async updateDob(req, res){
         try {
-          const resData = await authServices.updateDateOfBirth(req.params.id,req.body);
+          const resData = await authServices.updateDob(req.params.id,req.body);
           resExport(200, 'DateOfBirth updated successfully', resData, res);
         }catch(error){
           resExport(500, error.message, null, res);

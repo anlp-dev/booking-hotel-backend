@@ -184,6 +184,8 @@ class authService {
     }
   }
 
+  
+
   async updatePhone(id, Data){
     try {
       const { phone} = Data;
