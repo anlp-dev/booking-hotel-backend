@@ -85,6 +85,198 @@ class authService {
     }
   }
 
+  async updateNameUser(id,Data) {
+    try {
+      const {  first_name, last_name } = Data;
+      if ( !first_name|| !last_name) {
+        throw new Error("All fields are required");
+      }
+
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+
+     
+
+      data.first_name = first_name;
+      data.last_name = last_name;
+      await data.save();
+      return data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async updateUsername(id, Data){
+    try {
+      
+      const {username} = Data;
+      if(!id || !username){
+        throw new Error("All fields are required");
+      }
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+      const checkdata = await User.findOne({username: username});
+      if(checkdata){
+        throw new Error("username đã tồn tại");
+      }
+      data.username = username;
+      await data.save();
+      return data;
+
+      
+      
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+  }
+
+  async updateEmail(id, Data){
+    try {
+      const { email} = Data;
+      if(!id || !email){
+        throw new Error("All fields are required");
+      }
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+      const checkdata = await User.findOne({email: email});
+      if(checkdata){
+        throw new Error("email đã tồn tại");
+      }
+      data.email = email;
+      await data.save();
+      return data;
+
+      
+      
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+  }
+
+  async updateAvatar(id, Data){
+    try {
+      const { avatar} = Data;
+      if(!id || !avatar){
+        throw new Error("All fields are required");
+      }
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+      
+      data.avatar = avatar;
+      await data.save();
+      return data;
+
+      
+      
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+  }
+
+  
+
+  async updatePhone(id, Data){
+    try {
+      const { phone} = Data;
+      if(!id || !phone){
+        throw new Error("All fields are required");
+      }
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+      const checkdata = await User.findOne({phone: phone});
+      if(checkdata){
+        throw new Error("phone đã tồn tại");
+      }
+      data.phone = phone;
+      await data.save();
+      return data;
+
+      
+      
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+  }
+
+  async updateAddress(id, Data){
+    try {
+      const { address} = Data;
+      if(!id || !address){
+        throw new Error("All fields are required");
+      }
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+     
+      data.address = address;
+      await data.save();
+      return data;
+
+      
+      
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+  }
+
+  async updateDob(id,Data){
+    try {
+      const { dateOfBirth} = Data;
+      if(!id || !dateOfBirth){
+        throw new Error("All fields are required");
+      }
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+     
+      data.dateOfBirth = dateOfBirth;
+      await data.save();
+      return data;
+      
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+  }
+
+  async updateGender(id, Data){
+    try {
+      const { gender} = Data;
+      if(!id || !gender){
+        throw new Error("All fields are required");
+      }
+      const data = await User.findById(id);
+      if (!data) {
+        throw new Error("User is not found");
+      }
+     
+      data.gender = gender;
+      await data.save();
+      return data;
+      
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+  }
+
   generateToken(userId, role) {
     const token = jwt.sign({ userId, role }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",
