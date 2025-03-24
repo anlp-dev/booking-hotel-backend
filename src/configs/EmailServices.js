@@ -68,7 +68,9 @@ const sendCancelBookingEmail = async (booking, refundAmount) => {
             Xin chào <strong>${booking.customerName}</strong>,
           </p>
           <p style="color: #333; font-size: 16px; text-align: center;">
-            Đặt phòng của bạn tại <strong>${booking.hotelName}</strong> đã được hủy thành công.
+            Đặt phòng của bạn tại <strong>${
+              booking.hotelName
+            }</strong> đã được hủy thành công.
           </p>
           <p style="color: #333; font-size: 16px; text-align: center;">
             Ngày nhận phòng: <strong>${booking.checkIn}</strong><br />
@@ -76,9 +78,15 @@ const sendCancelBookingEmail = async (booking, refundAmount) => {
             Loại phòng: <strong>${booking.roomType}</strong>
           </p>
           <p style="color: #333; font-size: 16px; text-align: center;">
-            Số tiền bạn đã thanh toán: <strong>${booking.totalAmount} VND</strong><br />
+            Số tiền bạn đã thanh toán: <strong>${
+              booking.totalAmount
+            } VND</strong><br />
             
-            Quý khách đã yêu cầu hủy đặt phòng ${booking.code}. Theo chính sách của chúng tôi, chúng tôi sẽ hoàn lại <strong>${refundAmount} VND</strong> tiền đặt cọc vào tài khoản/thẻ thanh toán trong vòng 3-5 ngày làm việc.
+            Quý khách đã yêu cầu hủy đặt phòng ${
+              booking.code
+            }. Theo chính sách của chúng tôi, chúng tôi sẽ hoàn lại <strong>${
+      refundAmount ? refundAmount : 0
+    } VND</strong> tiền đặt cọc vào tài khoản/thẻ thanh toán trong vòng 3-5 ngày làm việc.
             Phương thức thanh toán: <strong>${booking.paymentMethod}</strong>
           </p>
           <p style="color: #333; font-size: 14px; text-align: center;">
