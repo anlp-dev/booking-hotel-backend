@@ -199,4 +199,8 @@ router.post("/create", BookingController.createBooking);
  */
 router.put("/update-status", BookingController.updateStatusBooking);
 
+router.get("/getByCode/:code", BookingController.getBookingByCode)
+
+router.post("/updatePayment", BookingController.updatePaymentStatus)
+
 module.exports = router;

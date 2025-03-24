@@ -78,21 +78,11 @@ class SystemService {
     }
   }
 
-  async getLogRequest(dataReq){
+  async getLogRequest(){
     try{
-      let {page = 1, limit = 10} = dataReq;
-      page = parseInt(page);
-      limit = parseInt(limit);
-      const dataLog = await LogRequest.find({}).skip((page - 1) * limit).limit(limit);
-      if(!dataLog){
-        throw new Error("Không tìm thấy dữ liệu");
-      }
-      let response = {
-        logReq: dataLog,
-        page: page,
-        limit: limit,
-      }
-      return response;
+      const logRequestList = await LogRequest.find({});
+      if(logRequestList.length < 1) throw new Error("Không tìm thấy request !")
+      return logRequestList;
     }catch (e) {
       throw new Error(e);
     }
