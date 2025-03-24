@@ -4,6 +4,7 @@ const FacilityService = require("../../services/facility/Facility.service");
 const getAllFacilities = async (req, res) => {
   try {
     const facilities = await FacilityService.getAllFacilities();
+
     res.status(200).json(facilities);
   } catch (error) {
     res.status(500).json({ message: "Lỗi khi lấy danh sách vật tư", error });
