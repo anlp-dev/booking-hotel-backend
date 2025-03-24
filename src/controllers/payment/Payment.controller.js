@@ -9,8 +9,10 @@ class PaymentController{
             path: 'booking_id',
             populate: { path: 'user_id' }
         });
+        
 
           const format = payments.map(payment => ({
+            id: payment._id,
             user: payment.booking_id?.user_id?.username || null,
             amount: payment.amount,
             method: payment.method,
@@ -29,6 +31,23 @@ class PaymentController{
           throw error;
         }
       }
+
+
+      async deletePayment(req, res) {
+        try {
+            const { id } = req.params;
+            const deletedPayment = await Payment.findByIdAndDelete(id);
+    
+            if (!deletedPayment) {
+                return res.status(404).json({ message: "Không tìm thấy thanh toán để xóa" });
+            }
+    
+            return res.status(200).json({ message: "Xóa thanh toán thành công" });
+        } catch (error) {
+            console.error("Lỗi khi xóa thanh toán:", error);
+            return res.status(500).json({ message: "Lỗi máy chủ", error });
+        }
+    }
 
 
     
