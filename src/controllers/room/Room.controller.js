@@ -104,7 +104,7 @@ class RoomController {
   async updateRoom(req, res) {
     try {
       const roomId = req.params.roomId;
-      const updateData = req.body.roomData;
+      const updateData = req.body;
 
       const updatedRoom = await Room.findByIdAndUpdate(
         roomId,
@@ -134,7 +134,9 @@ class RoomController {
   async deleteRoom(req, res) {
     try {
       const roomId = req.params.roomId;
-      const deletedRoom = await Room.findByIdAndDelete(roomId);
+      const deletedRoom = await Room.findByIdAndUpdate(roomId, {
+        isDeleted: true,
+      });
 
       if (!deletedRoom) {
         return res.status(404).json({ message: "Không tìm thấy phòng để xóa" });

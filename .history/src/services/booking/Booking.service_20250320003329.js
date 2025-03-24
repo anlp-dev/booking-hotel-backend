@@ -1,4 +1,3 @@
-const { sendCancelBookingEmail } = require("../../configs/EmailServices");
 const Booking = require("../../models/hotel/Booking");
 const Payment = require("../../models/hotel/Payment");
 const Room = require("../../models/hotel/Room");
@@ -130,13 +129,7 @@ class BookingService {
         throw new Error("All fields are required");
       }
 
-      const dataBooking = await Booking.findOne({code: id});
-
-      if (!dataBooking) {
-        throw new Error("Booking not found");
-      }
-
-      const dataPayment = await Payment.findOne({booking_id: dataBooking._id});
+      const dataPayment = await Payment.findById(id);
       if (!dataPayment) {
         throw new Error("Payment not found");
       }
@@ -146,41 +139,6 @@ class BookingService {
       return dataPayment;
     } catch (e) {
       throw new Error(e);
-    }
-  }
-
-
-  async cancelBooking(bookingData) {
-    try {
-      const { booking, refundAmount } = bookingData;
-
-      if (!booking) {
-        throw new Error("Booking is required");
-      }
-      if (!refundAmount) {
-        throw new Error("RefundAmount is required");
-      }
-
-      const dataBooking = await Booking.findById(booking.id);
-      if (!dataBooking) {
-        throw new Error("Booking not found");
-      }
-
-      if (booking.status === "cancelled") {
-        const room = await Room.findById(booking.roomId);
-        if (room) {
-          room.status = "available";
-          await room.save();
-        }
-      }
-
-      dataBooking.status = "cancelled";
-
-      await sendCancelBookingEmail(booking, refundAmount);
-      await dataBooking.save();
-      return dataBooking;
-    } catch (error) {
-      throw new Error(error);
     }
   }
 
@@ -196,7 +154,7 @@ class BookingService {
 
       return booking;
     } catch (error) {
-      throw new Error(error);
+      throw new Error(e);
     }
   }
 
@@ -209,7 +167,9 @@ class BookingService {
         .populate("user_id") // Lấy thông tin user (chỉ username và email)
         .populate({
           path: "room_id",
-          populate: [{ path: "hotel_id" }, { path: "facility_id" }],
+          populate: {
+            path: "room_id",
+          },
         }); // Lấy thông tin phòng
 
       if (!bookings) {
@@ -217,38 +177,7 @@ class BookingService {
       }
       return bookings;
     } catch (error) {
-      throw new Error(error);
-
-  async getBookingByCode(code) {
-    try{
-      const dataBooking = await Booking.findOne({ code: code })
-          .populate("user_id")
-          .populate({
-            path: "room_id",
-            populate: [
-              { path: "hotel_id" }, // Populate hotel_id từ room_id
-              { path: "facility_id" } // Populate facility_id từ room_id
-            ]
-          });
-
-      if(!dataBooking){
-        throw new Error("Lỗi khi lấy danh sách booking");
-      }
-
-      const dataPayment = await Payment.findOne({ booking_id: dataBooking._id });
-
-      if(!dataPayment){
-        throw new Error("Khong tim thay thong tin thanh toan")
-      }
-
-      let responseData = {
-        dataBooking: dataBooking,
-        dataPayment: dataPayment
-      }
-      return responseData;
-    }catch (e) {
       throw new Error(e);
-
     }
   }
 }

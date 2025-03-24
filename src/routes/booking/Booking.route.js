@@ -60,7 +60,7 @@ const BookingController = require("../../controllers/booking/Booking.controller"
  *       500:
  *         description: Lỗi server
  */
-router.get("/:userId", require("../../controllers/booking/getBookingByUser"));
+router.get("/user/:userId", BookingController.getBookingByUser);
 
 /**
  * @swagger
@@ -115,7 +115,7 @@ router.get("/:userId", require("../../controllers/booking/getBookingByUser"));
  *       500:
  *         description: Lỗi server
  */
-router.get("/:id", require("../../controllers/booking/getBookingById"));
+router.get("/:id", BookingController.getBoookingById);
 
 /**
  * @swagger
@@ -199,6 +199,12 @@ router.post("/create", BookingController.createBooking);
  */
 router.put("/update-status", BookingController.updateStatusBooking);
 
+/**
+ * @route PUT /api/booking/cancel-booking
+ * @description Cancel booking after user book room
+ * @access Private (Admin or Owner)
+ */
+router.put("/cancel-booking", BookingController.cancelBooking);
 router.get("/getByCode/:code", BookingController.getBookingByCode)
 
 router.post("/updatePayment", BookingController.updatePaymentStatus)

@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const RoomController = require("../../controllers/room/Room.controller");
-const {checkPermission} = require("../../middleware/AuthPermission");
+
+const { checkPermission } = require("../../middleware/AuthPermission");
+
 
 /**
  * @swagger
@@ -9,6 +11,7 @@ const {checkPermission} = require("../../middleware/AuthPermission");
  *   name: Room
  *   description: API quản lý phòng khách sạn
  */
+
 
 /**
  * @swagger
@@ -116,6 +119,7 @@ router.get("/get-by-id/:roomId", RoomController.getRoomById);
  *         description: Lỗi server
  */
 router.get("/", RoomController.getAllRooms);
+
 
 /**
  * @swagger
@@ -253,6 +257,7 @@ router.put("/:roomId", checkPermission(["SUPER", "MANAGER_ROOM_ADMIN"]), RoomCon
  *         description: Lỗi server
  */
 router.delete("/:roomId", checkPermission(["SUPER", "MANAGER_ROOM_ADMIN"]), RoomController.deleteRoom);
+
 
 
 module.exports = router;
