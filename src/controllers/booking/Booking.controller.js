@@ -20,6 +20,15 @@ class BookingController {
     }
   }
 
+  async cancelBooking(req, res) {
+    try {
+      const resData = await BookingService.cancelBooking(req.body);
+      resExport(200, "Booking cancel successfully", resData, res);
+    } catch (error) {
+      resExport(500, error.message, null, res);
+    }
+  }
+
   async getBoookingById(req, res) {
     try {
       const resData = await BookingService.getBookingById(req.params.id);

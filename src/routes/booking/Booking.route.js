@@ -20,4 +20,11 @@ router.get("/:id", BookingController.getBoookingById);
 router.post("/create", BookingController.createBooking);
 router.put("/update-status", BookingController.updateStatusBooking);
 
+/**
+ * @route PUT /api/booking/cancel-booking
+ * @description Cancel booking after user book room
+ * @access Private (Admin or Owner)
+ */
+router.put("/cancel-booking", BookingController.cancelBooking);
+
 module.exports = router;

@@ -146,12 +146,8 @@ class BookingService {
   async cancelBooking(bookingData) {
     try {
       const { booking, refundAmount } = bookingData;
-
-      if (!booking) {
-        throw new Error("Booking is required");
-      }
-      if (!refundAmount) {
-        throw new Error("RefundAmount is required");
+      if (!booking || !refundAmount) {
+        throw new Error("All fields are required");
       }
 
       const dataBooking = await Booking.findById(booking.id);

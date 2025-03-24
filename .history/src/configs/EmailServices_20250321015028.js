@@ -52,7 +52,7 @@ const sendVerificationEmail = async (username, email, verificationLink) => {
 };
 
 // Hàm gửi mail hủy phòng
-const sendCancelBookingEmail = async (booking, refundAmount) => {
+const sendCancelBookingEmail = async (booking) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: booking.email,
@@ -76,9 +76,7 @@ const sendCancelBookingEmail = async (booking, refundAmount) => {
             Loại phòng: <strong>${booking.roomType}</strong>
           </p>
           <p style="color: #333; font-size: 16px; text-align: center;">
-            Số tiền bạn đã thanh toán: <strong>${booking.totalAmount} VND</strong><br />
-            
-            Quý khách đã yêu cầu hủy đặt phòng ${booking.code}. Theo chính sách của chúng tôi, chúng tôi sẽ hoàn lại <strong>${refundAmount} VND</strong> tiền đặt cọc vào tài khoản/thẻ thanh toán trong vòng 3-5 ngày làm việc.
+            Số tiền hoàn trả: <strong>${booking.refundAmount} VND</strong><br />
             Phương thức thanh toán: <strong>${booking.paymentMethod}</strong>
           </p>
           <p style="color: #333; font-size: 14px; text-align: center;">
@@ -93,8 +91,8 @@ const sendCancelBookingEmail = async (booking, refundAmount) => {
   };
 
   try {
-    console.log("Email hủy phòng đã được gửi tới:", booking.email);
     await transporter.sendMail(mailOptions);
+    console.log("Email hủy phòng đã được gửi tới:", booking.email);
   } catch (error) {
     throw new Error("Không thể gửi email hủy phòng: " + error.message);
   }
