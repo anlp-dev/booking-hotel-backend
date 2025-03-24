@@ -59,4 +59,8 @@ router.post("/create-url-vnpay", PaymentController.createPayment)
 
 
 
+router.get("/", PaymentController.getAllPaymetns);
+
+
+
 module.exports = router;
