@@ -1,5 +1,8 @@
 const { loadRoutePermissions } = require("../../middleware/RoutePermissionMiddleware");
 const RouteManage = require("../../models/system/RouterManage");
+const LogRequest = require("../../models/system/LogRequest");
+const User = require("../../models/user/User");
+const Booking = require("../../models/hotel/Booking")
 
 class SystemService {
   async getAllRoute(){
@@ -44,6 +47,129 @@ class SystemService {
       await loadRoutePermissions();
       return newRoute;
     }catch(e){
+      throw new Error(e);
+    }
+  }
+
+  async updateRoute(dataReq){
+    try{
+      const {id, path, method, requireToken} = dataReq;
+      const checkRoute = await RouteManage.findById(id);
+      if(!checkRoute){
+        throw new Error("Không tìm thấy dữ liệu");
+      }
+      checkRoute.path = path;
+      checkRoute.method = method;
+      checkRoute.requireToken = requireToken;
+      await checkRoute.save();
+      await loadRoutePermissions();
+      return checkRoute;
+    }catch(e){
+      throw new Error(e);
+    }
+  }
+
+  async deleteRoute(id){
+    try{
+      await RouteManage.findByIdAndDelete(id);
+      return await RouteManage.find({});
+    }catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async getLogRequest(dataReq){
+    try{
+      let {page = 1, limit = 10} = dataReq;
+      page = parseInt(page);
+      limit = parseInt(limit);
+      const dataLog = await LogRequest.find({}).skip((page - 1) * limit).limit(limit);
+      if(!dataLog){
+        throw new Error("Không tìm thấy dữ liệu");
+      }
+      let response = {
+        logReq: dataLog,
+        page: page,
+        limit: limit,
+      }
+      return response;
+    }catch (e) {
+      throw new Error(e);
+    }
+  }
+
+  async getDashBoard() {
+    try {
+      // Basic counts
+      const totalRoute = await RouteManage.countDocuments({});
+      const totalLog = await LogRequest.countDocuments({});
+      const totalUser = await User.countDocuments({});
+      const totalBooking = await Booking.countDocuments({});
+
+      // User statistics
+      const usersByMonth = await User.aggregate([
+        {
+          $group: {
+            _id: {
+              year: { $year: "$createdAt" },
+              month: { $month: "$createdAt" }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } }
+      ]);
+
+      // Booking statistics
+      const bookingsByMonth = await Booking.aggregate([
+        {
+          $group: {
+            _id: {
+              year: { $year: "$createdAt" },
+              month: { $month: "$createdAt" }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        { $sort: { "_id.year": 1, "_id.month": 1 } }
+      ]);
+
+      // Booking status distribution
+      const bookingsByStatus = await Booking.aggregate([
+        {
+          $group: {
+            _id: "$status",
+            count: { $sum: 1 }
+          }
+        }
+      ]);
+
+      // Format the data for charts
+      const userChartData = usersByMonth.map(item => ({
+        period: `${item._id.year}-${item._id.month}`,
+        count: item.count
+      }));
+
+      const bookingChartData = bookingsByMonth.map(item => ({
+        period: `${item._id.year}-${item._id.month}`,
+        count: item.count
+      }));
+
+      const response = {
+        // Basic counts
+        totalRoute,
+        totalLog,
+        totalUser,
+        totalBooking,
+
+        // Chart data
+        userChartData,
+        bookingChartData,
+        bookingsByStatus
+      };
+
+      return response;
+    } catch (e) {
       throw new Error(e);
     }
   }

@@ -80,7 +80,7 @@ router.put("/role", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminContr
  *     summary: Lấy danh sách quyền (permissions)
  *     tags: [Admin]
  */
-router.get("/permission", AdminController.getPermission);
+router.get("/permission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.getPermission);
 
 /**
  * @swagger
@@ -138,17 +138,15 @@ router.get("/rolePermission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), 
  */
 router.put("/rolePermission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), AdminController.updateRolePermission);
 
-// Thêm các route cho quản lý vật tư (facility) cùng với Swagger
-
 /**
  * @swagger
- * /admin/facility:
+ * /admin/booking:
  *   get:
- *     summary: Lấy danh sách vật tư
+ *     summary: Lấy tất cả đơn đặt phòng
  *     tags: [Admin]
  *     responses:
  *       200:
- *         description: Danh sách vật tư
+ *         description: Trả về danh sách đơn đặt phòng
  *         content:
  *           application/json:
  *             schema:
@@ -156,58 +154,29 @@ router.put("/rolePermission", checkPermission(["SUPER", "MANAGER_ROLE_ADMIN"]), 
  *               items:
  *                 type: object
  *                 properties:
- *                   _id:
+ *                   id:
  *                     type: string
- *                   name:
+ *                   userId:
  *                     type: string
- *                   description:
+ *                   facilityId:
  *                     type: string
- *                   created_at:
+ *                   startTime:
  *                     type: string
  *                     format: date-time
+ *                   endTime:
+ *                     type: string
+ *                     format: date-time
+ *                   status:
+ *                     type: string
+ *                     enum: [PENDING, APPROVED, REJECTED, COMPLETED]
  */
-router.get("/facility", FacilityControllers.getAllFacilities);
+router.get("/booking", checkPermission(["SUPER", "MANAGER_BOOKING_ADMIN"]), AdminController.getAllBooking);
 
 /**
  * @swagger
- * /admin/facility/{id}:
- *   get:
- *     summary: Lấy thông tin vật tư theo ID
- *     tags: [Admin]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID của vật tư
- *     responses:
- *       200:
- *         description: Thông tin vật tư
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
- *       404:
- *         description: Không tìm thấy vật tư
- */
-router.get("/facility/:id", FacilityControllers.getFacilityById);
-
-/**
- * @swagger
- * /admin/facility:
+ * /admin/booking:
  *   post:
- *     summary: Thêm mới vật tư
+ *     summary: Tạo mới đơn đặt phòng
  *     tags: [Admin]
  *     requestBody:
  *       required: true
@@ -216,47 +185,37 @@ router.get("/facility/:id", FacilityControllers.getFacilityById);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               userId:
  *                 type: string
- *                 example: "Vật tư A"
- *               description:
+ *                 example: "user123"
+ *               facilityId:
  *                 type: string
- *                 example: "Mô tả vật tư A"
+ *                 example: "facility456"
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-21T09:00:00Z"
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-21T12:00:00Z"
+ *               notes:
+ *                 type: string
+ *                 example: "Họp ban quản lý"
  *     responses:
  *       201:
- *         description: Vật tư đã được tạo
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
+ *         description: Tạo mới đơn đặt phòng thành công
  *       400:
- *         description: Lỗi khi tạo vật tư
+ *         description: Dữ liệu không hợp lệ
  */
-router.post("/facility", FacilityControllers.createFacility);
+router.post("/booking", checkPermission(["SUPER", "MANAGER_BOOKING_ADMIN"]), AdminController.createNewBooking);
 
 /**
  * @swagger
- * /admin/facility/{id}:
+ * /admin/booking:
  *   put:
- *     summary: Cập nhật vật tư theo ID
+ *     summary: Cập nhật đơn đặt phòng
  *     tags: [Admin]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID của vật tư
  *     requestBody:
  *       required: true
  *       content:
@@ -264,41 +223,39 @@ router.post("/facility", FacilityControllers.createFacility);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               id:
  *                 type: string
- *                 example: "Vật tư A cập nhật"
- *               description:
+ *                 example: "booking789"
+ *               status:
  *                 type: string
- *                 example: "Mô tả cập nhật"
+ *                 enum: [PENDING, APPROVED, REJECTED, COMPLETED]
+ *                 example: "APPROVED"
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-21T10:00:00Z"
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-03-21T13:00:00Z"
+ *               notes:
+ *                 type: string
+ *                 example: "Cập nhật thời gian họp"
  *     responses:
  *       200:
- *         description: Vật tư đã được cập nhật
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 description:
- *                   type: string
- *                 created_at:
- *                   type: string
- *                   format: date-time
- *       404:
- *         description: Không tìm thấy vật tư
+ *         description: Cập nhật đơn đặt phòng thành công
  *       400:
- *         description: Lỗi khi cập nhật vật tư
+ *         description: Dữ liệu không hợp lệ
+ *       404:
+ *         description: Không tìm thấy đơn đặt phòng
  */
-router.put("/facility/:id", FacilityControllers.updateFacility);
+router.put("/booking", checkPermission(["SUPER", "MANAGER_BOOKING_ADMIN"]), AdminController.updateBooking);
 
 /**
  * @swagger
- * /admin/facility/{id}:
- *   delete:
- *     summary: Xóa vật tư theo ID
+ * /admin/booking/{id}:
+ *   get:
+ *     summary: Xóa đơn đặt phòng theo ID
  *     tags: [Admin]
  *     parameters:
  *       - in: path
@@ -306,23 +263,13 @@ router.put("/facility/:id", FacilityControllers.updateFacility);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID của vật tư
+ *         description: ID của đơn đặt phòng
  *     responses:
  *       200:
- *         description: Xóa vật tư thành công
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Xóa vật tư thành công"
+ *         description: Xóa đơn đặt phòng thành công
  *       404:
- *         description: Không tìm thấy vật tư
- *       500:
- *         description: Lỗi khi xóa vật tư
+ *         description: Không tìm thấy đơn đặt phòng
  */
-router.delete("/facility/:id", FacilityControllers.deleteFacility);
+router.get("/booking/:id", checkPermission(["SUPER", "MANAGER_BOOKING_ADMIN"]), AdminController.deleteBooking);
 
 module.exports = router;

@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Đặt vé khách sạn",
+      title: "Booking Hotel API",
       version: "1.0.0",
-      description: "Tài liệu API cho dự án đặt vé khách sạn",
+      description: "API Doc for booking hotel !!!",
     },
     components: {
       securitySchemes: {
