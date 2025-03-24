@@ -13,7 +13,8 @@ const BookingSchema = new mongoose.Schema({
   },
   code: {
     type: String,
-    required: true
+    required: true,
+    unique: true,
   },
   check_in: {
     type: Date,
