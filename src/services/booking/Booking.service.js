@@ -205,12 +205,12 @@ class BookingService {
       if (!userId) {
         throw new Error("User is not found");
       }
-      const bookings = await Booking.find({ user_id: userId })
-        .populate("user_id") // Lấy thông tin user (chỉ username và email)
-        .populate({
-          path: "room_id",
-          populate: [{ path: "hotel_id" }, { path: "facility_id" }],
-        }); // Lấy thông tin phòng
+      const bookings = await Booking.find({user_id: userId})
+          .populate("user_id") // Lấy thông tin user (chỉ username và email)
+          .populate({
+            path: "room_id",
+            populate: [{path: "hotel_id"}, {path: "facility_id"}],
+          }); // Lấy thông tin phòng
 
       if (!bookings) {
         throw new Error("User don't have any booking");
@@ -218,7 +218,8 @@ class BookingService {
       return bookings;
     } catch (error) {
       throw new Error(error);
-
+    }
+  }
   async getBookingByCode(code) {
     try{
       const dataBooking = await Booking.findOne({ code: code })
