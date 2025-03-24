@@ -60,7 +60,7 @@ router.post("/create-url-vnpay", PaymentController.createPayment)
 
 
 router.get("/", PaymentController.getAllPaymetns);
-router.delete("/:payment_id", PaymentController.deletePayment);
+
 
 
 module.exports = router;
