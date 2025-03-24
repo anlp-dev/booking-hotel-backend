@@ -152,22 +152,22 @@ class BookingService {
 
   async cancelBooking(bookingData) {
     try {
-      const { booking, refundAmount } = bookingData;
-
-      if (!booking) {
+      if (!bookingData) {
         throw new Error("Booking is required");
       }
-      if (!refundAmount) {
-        throw new Error("RefundAmount is required");
-      }
+      // if (!refundAmount) {
+      //   throw new Error("RefundAmount is required");
+      // }
 
-      const dataBooking = await Booking.findById(booking.id);
+      const dataBooking = await Booking.findById(
+        bookingData.booking.booking.id
+      );
       if (!dataBooking) {
         throw new Error("Booking not found");
       }
 
-      if (booking.status === "cancelled") {
-        const room = await Room.findById(booking.roomId);
+      if (bookingData.booking.booking.status === "cancelled") {
+        const room = await Room.findById(bookingData.booking.booking.roomId);
         if (room) {
           room.status = "available";
           await room.save();
@@ -176,7 +176,10 @@ class BookingService {
 
       dataBooking.status = "cancelled";
 
-      await sendCancelBookingEmail(booking, refundAmount);
+      await sendCancelBookingEmail(
+        bookingData.booking.booking,
+        bookingData.booking.refundAmount
+      );
       await dataBooking.save();
       return dataBooking;
     } catch (error) {
