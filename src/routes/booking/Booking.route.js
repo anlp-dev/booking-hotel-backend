@@ -205,5 +205,8 @@ router.put("/update-status", BookingController.updateStatusBooking);
  * @access Private (Admin or Owner)
  */
 router.put("/cancel-booking", BookingController.cancelBooking);
+router.get("/getByCode/:code", BookingController.getBookingByCode)
+
+router.post("/updatePayment", BookingController.updatePaymentStatus)
 
 module.exports = router;

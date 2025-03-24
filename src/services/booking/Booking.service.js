@@ -130,7 +130,13 @@ class BookingService {
         throw new Error("All fields are required");
       }
 
-      const dataPayment = await Payment.findById(id);
+      const dataBooking = await Booking.findOne({code: id});
+
+      if (!dataBooking) {
+        throw new Error("Booking not found");
+      }
+
+      const dataPayment = await Payment.findOne({booking_id: dataBooking._id});
       if (!dataPayment) {
         throw new Error("Payment not found");
       }
@@ -142,6 +148,7 @@ class BookingService {
       throw new Error(e);
     }
   }
+
 
   async cancelBooking(bookingData) {
     try {
@@ -211,6 +218,37 @@ class BookingService {
       return bookings;
     } catch (error) {
       throw new Error(error);
+
+  async getBookingByCode(code) {
+    try{
+      const dataBooking = await Booking.findOne({ code: code })
+          .populate("user_id")
+          .populate({
+            path: "room_id",
+            populate: [
+              { path: "hotel_id" }, // Populate hotel_id từ room_id
+              { path: "facility_id" } // Populate facility_id từ room_id
+            ]
+          });
+
+      if(!dataBooking){
+        throw new Error("Lỗi khi lấy danh sách booking");
+      }
+
+      const dataPayment = await Payment.findOne({ booking_id: dataBooking._id });
+
+      if(!dataPayment){
+        throw new Error("Khong tim thay thong tin thanh toan")
+      }
+
+      let responseData = {
+        dataBooking: dataBooking,
+        dataPayment: dataPayment
+      }
+      return responseData;
+    }catch (e) {
+      throw new Error(e);
+
     }
   }
 }

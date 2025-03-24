@@ -322,4 +322,6 @@ router.get("/get-log", checkPermission(["SUPER"]), SystemController.getLogReques
  */
 router.get("/dashboard", checkPermission(["SUPER"]), SystemController.getDashboard)
 
+router.get("/logRequest/get", checkPermission(["SUPER"]), SystemController.getAllLogRequest);
+
 module.exports = router;

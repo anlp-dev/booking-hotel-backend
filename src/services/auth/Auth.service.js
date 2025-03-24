@@ -41,11 +41,6 @@ class authService {
     try{
       const {email, googleToken} = data;
       
-      // Kiểm tra token Google (cần thêm thư viện axios)
-      if (!googleToken) {
-        throw new Error("Thiếu token xác thực Google!");
-      }
-      
       // TODO: Verify Google token using Google API
       // const verifyEndpoint = `https://oauth2.googleapis.com/tokeninfo?id_token=${googleToken}`;
       // const response = await axios.get(verifyEndpoint);

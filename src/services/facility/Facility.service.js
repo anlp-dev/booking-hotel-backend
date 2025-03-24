@@ -2,7 +2,7 @@
 const Facility = require("../../models/hotel/Facility");
 
 const getAllFacilities = async () => {
-  return await Facility.find();
+  return await Facility.find({});
 };
 
 const getFacilityById = async (id) => {
