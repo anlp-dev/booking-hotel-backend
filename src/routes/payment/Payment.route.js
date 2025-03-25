@@ -63,4 +63,7 @@ router.get("/", PaymentController.getAllPaymetns);
 
 router.delete('/:id',PaymentController.deletePayment);
 
+router.get('/user/:userId', PaymentController.getPaymentsByUserId);
+
+
 module.exports = router;
