@@ -50,6 +50,43 @@ class PaymentController{
     }
 
 
+    async getPaymentsByUserId(req, res) {
+      try {
+          const { userId } = req.params;
+  
+          const payments = await Payment.find()
+              .populate({
+                  path: 'booking_id',
+                  populate: [
+                      { path: 'user_id' },
+                      { path: 'room_id' }
+                  ]
+              })
+              .then(payments =>
+                  payments.filter(payment => payment.booking_id?.user_id?._id.toString() === userId)
+              );
+  
+          if (!payments.length) {
+              return res.status(404).json({ message: "Không tìm thấy thanh toán cho người dùng này" });
+          }
+  
+          const format = payments.map(payment => ({
+              id: payment._id,
+              user: payment.booking_id?.user_id?.username || null,
+              room: payment.booking_id?.room_id?.type|| null,
+              amount: payment.amount,
+              method: payment.method,
+              status: payment.status,
+              payment_date: payment.payment_date
+          }));
+  
+          return res.status(200).json({ message: "Lấy danh sách thanh toán thành công", data: format });
+      } catch (error) {
+          console.error("Lỗi khi lấy danh sách thanh toán:", error);
+          return res.status(500).json({ message: "Lỗi máy chủ", error });
+      }
+  }
+
     
     createPayment(req, res){
         try{
