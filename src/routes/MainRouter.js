@@ -9,8 +9,10 @@ const systemRouter = require("./system/System.route");
 const roomRouter = require("./room/Room.route");
 const RegisterRouter = require("./register/Register.route");
 const bookingRouter = require("./booking/Booking.route");
+const facilityRouter = require("./facility/Facility.route");
 
 router.use("/api/admin", adminRouter);
+router.use("/api/admin", facilityRouter);
 router.use("/api/admin_discount", DiscountRouter);
 router.use("/api/auth", authRouter);
 router.use("/api/user", ProfileRoute);
